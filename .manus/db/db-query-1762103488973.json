@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE benchmark_results SET status = 'running', progress = 10, currentTask = 'Benchmark in progress (detected running process)' WHERE id = 30001;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute UPDATE benchmark_results SET status = 'running', progress = 10, currentTask = 'Benchmark in progress (detected running process)' WHERE id = 30001;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1553
+}

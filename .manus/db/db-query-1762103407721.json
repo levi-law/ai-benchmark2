@@ -1,0 +1,49 @@
+{
+  "query": "SELECT * FROM benchmark_results ORDER BY id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute SELECT * FROM benchmark_results ORDER BY id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "30001",
+      "versionName": "v5",
+      "apiUrl": "https://superai-llm-engine-ccgxnii32a-uc.a.run.app",
+      "sampleLimit": "50",
+      "status": "running",
+      "progress": "0",
+      "currentTask": "Starting benchmark...",
+      "arcEasy": "NULL",
+      "hellaswag": "NULL",
+      "truthfulqa": "NULL",
+      "average": "NULL",
+      "errorMessage": "NULL",
+      "createdAt": "2025-11-02 17:06:14",
+      "completedAt": "NULL"
+    }
+  ],
+  "messages": [
+    "2\tv55\thttps://superai-llm-engine-ccgxnii32a-uc.a.run.app\t10\terror\t0\tStarting benchmark...\tNULL\tNULL\tNULL\tNULL\tBenchmark process exited with code 1: Traceback (most recent call last):",
+    "  File \"/home/ubuntu/superai_benchmark/run_benchmark.py\", line 3, in <module>",
+    "    import argparse",
+    "  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/argparse.py\", line 89, in <module>",
+    "    import re as _re",
+    "  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/__init__.py\", line 126, in <module>",
+    "    from . import _compiler, _parser",
+    "  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/_compiler.py\", line 18, in <module>",
+    "    assert _sre.MAGIC == MAGIC, \"SRE module mismatch\"",
+    "AssertionError: SRE module mismatch",
+    "\t2025-11-02 16:38:46\tNULL",
+    "1\tv5\thttps://superai-llm-engine-ccgxnii32a-uc.a.run.app\t50\terror\t0\tStarting benchmark...\tNULL\tNULL\tNULL\tNULL\tBenchmark process exited with code 1: Traceback (most recent call last):",
+    "  File \"/home/ubuntu/superai_benchmark/run_benchmark.py\", line 3, in <module>",
+    "    import argparse",
+    "  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/argparse.py\", line 89, in <module>",
+    "    import re as _re",
+    "  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/__init__.py\", line 126, in <module>",
+    "    from . import _compiler, _parser",
+    "  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/_compiler.py\", line 18, in <module>",
+    "    assert _sre.MAGIC == MAGIC, \"SRE module mismatch\"",
+    "AssertionError: SRE module mismatch",
+    "\t2025-11-02 16:36:36\tNULL"
+  ],
+  "stdout": "id\tversionName\tapiUrl\tsampleLimit\tstatus\tprogress\tcurrentTask\tarcEasy\thellaswag\ttruthfulqa\taverage\terrorMessage\tcreatedAt\tcompletedAt\n30001\tv5\thttps://superai-llm-engine-ccgxnii32a-uc.a.run.app\t50\trunning\t0\tStarting benchmark...\tNULL\tNULL\tNULL\tNULL\tNULL\t2025-11-02 17:06:14\tNULL\n2\tv55\thttps://superai-llm-engine-ccgxnii32a-uc.a.run.app\t10\terror\t0\tStarting benchmark...\tNULL\tNULL\tNULL\tNULL\tBenchmark process exited with code 1: Traceback (most recent call last):\n  File \"/home/ubuntu/superai_benchmark/run_benchmark.py\", line 3, in <module>\n    import argparse\n  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/argparse.py\", line 89, in <module>\n    import re as _re\n  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/__init__.py\", line 126, in <module>\n    from . import _compiler, _parser\n  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/_compiler.py\", line 18, in <module>\n    assert _sre.MAGIC == MAGIC, \"SRE module mismatch\"\nAssertionError: SRE module mismatch\n\t2025-11-02 16:38:46\tNULL\n1\tv5\thttps://superai-llm-engine-ccgxnii32a-uc.a.run.app\t50\terror\t0\tStarting benchmark...\tNULL\tNULL\tNULL\tNULL\tBenchmark process exited with code 1: Traceback (most recent call last):\n  File \"/home/ubuntu/superai_benchmark/run_benchmark.py\", line 3, in <module>\n    import argparse\n  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/argparse.py\", line 89, in <module>\n    import re as _re\n  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/__init__.py\", line 126, in <module>\n    from . import _compiler, _parser\n  File \"/home/ubuntu/.local/share/uv/python/cpython-3.13.8-linux-x86_64-gnu/lib/python3.13/re/_compiler.py\", line 18, in <module>\n    assert _sre.MAGIC == MAGIC, \"SRE module mismatch\"\nAssertionError: SRE module mismatch\n\t2025-11-02 16:36:36\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1894
+}

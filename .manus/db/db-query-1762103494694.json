@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, versionName, status FROM benchmark_results;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute SELECT id, versionName, status FROM benchmark_results;",
+  "rows": [
+    {
+      "id": "1",
+      "versionName": "v5",
+      "status": "error"
+    },
+    {
+      "id": "2",
+      "versionName": "v55",
+      "status": "error"
+    },
+    {
+      "id": "30001",
+      "versionName": "v5",
+      "status": "running"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tversionName\tstatus\n1\tv5\terror\n2\tv55\terror\n30001\tv5\trunning\n",
+  "stderr": "",
+  "execution_time_ms": 1563
+}

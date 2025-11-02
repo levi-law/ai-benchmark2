@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO benchmark_results (id, versionName, apiUrl, sampleLimit, status, progress, currentTask, createdAt) VALUES (30001, 'V5 Test', 'https://superai-llm-engine-ccgxnii32a-uc.a.run.app', 50, 'running', 50, 'Benchmark in progress...', datetime('now'));",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute INSERT INTO benchmark_results (id, versionName, apiUrl, sampleLimit, status, progress, currentTask, createdAt) VALUES (30001, 'V5 Test', 'https://superai-llm-engine-ccgxnii32a-uc.a.run.app', 50, 'running', 50, 'Benchmark in progress...', datetime('now'));",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 247 near \"('now'))\""
+  ]
+}

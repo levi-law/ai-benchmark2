@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO benchmark_results (id, versionName, apiUrl, sampleLimit, status, progress, currentTask, createdAt) VALUES (30001, 'V5 Test', 'https://superai-llm-engine-ccgxnii32a-uc.a.run.app', 50, 'running', 50, 'Benchmark in progress...', NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute INSERT INTO benchmark_results (id, versionName, apiUrl, sampleLimit, status, progress, currentTask, createdAt) VALUES (30001, 'V5 Test', 'https://superai-llm-engine-ccgxnii32a-uc.a.run.app', 50, 'running', 50, 'Benchmark in progress...', NOW());",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1062 (23000) at line 1: Duplicate entry '?' for key 'benchmark_results.PRIMARY'"
+  ]
+}

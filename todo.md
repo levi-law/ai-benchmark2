@@ -49,3 +49,8 @@
 - [x] Fix Python version mismatch in benchmark execution (use python3.11 instead of python3.13)
 
 - [x] Fix Python environment PATH issue (Python 3.11 importing from Python 3.13 directories)
+
+- [x] Add production-level logging for benchmark execution
+- [x] Fix progress tracking and result display issues
+- [x] Debug why benchmark runs but shows no progress
+- [x] Fix Python buffering issue causing process to hang

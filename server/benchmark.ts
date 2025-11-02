@@ -24,6 +24,21 @@ export interface BenchmarkProgress {
 
 export type ProgressCallback = (progress: BenchmarkProgress) => void;
 
+const logger = {
+  info: (benchmarkId: number, msg: string, ...args: any[]) => {
+    console.log(`[Benchmark #${benchmarkId}] INFO:`, msg, ...args);
+  },
+  error: (benchmarkId: number, msg: string, ...args: any[]) => {
+    console.error(`[Benchmark #${benchmarkId}] ERROR:`, msg, ...args);
+  },
+  debug: (benchmarkId: number, msg: string, ...args: any[]) => {
+    console.log(`[Benchmark #${benchmarkId}] DEBUG:`, msg, ...args);
+  },
+  warn: (benchmarkId: number, msg: string, ...args: any[]) => {
+    console.warn(`[Benchmark #${benchmarkId}] WARN:`, msg, ...args);
+  },
+};
+
 /**
  * Run benchmark using the Python scripts from /home/ubuntu/superai_benchmark
  */
@@ -34,6 +49,9 @@ export async function runBenchmark(
 ): Promise<void> {
   const benchmarkDir = "/home/ubuntu/superai_benchmark";
   const outputDir = path.join(benchmarkDir, `results_web_${benchmarkId}`);
+
+  logger.info(benchmarkId, "Starting benchmark with config:", config);
+  logger.info(benchmarkId, "Output directory:", outputDir);
 
   return new Promise((resolve, reject) => {
     const args = [
@@ -48,6 +66,8 @@ export async function runBenchmark(
       outputDir,
     ];
 
+    logger.debug(benchmarkId, "Python command:", "/usr/bin/python3.11", args.join(" "));
+
     // Use minimal clean environment to avoid Python path conflicts with UV
     const cleanEnv: Record<string, string> = {
       PATH: "/usr/bin:/bin:/usr/local/bin",
@@ -55,19 +75,28 @@ export async function runBenchmark(
       LANG: "en_US.UTF-8",
       LC_ALL: "en_US.UTF-8",
     };
+
+    logger.debug(benchmarkId, "Environment:", cleanEnv);
     
-    const pythonProcess = spawn("/usr/bin/python3.11", args, {
+    const pythonProcess = spawn("/usr/bin/python3.11", ["-u", ...args], {
       cwd: benchmarkDir,
       env: cleanEnv,
+      stdio: ["ignore", "pipe", "pipe"],
     });
+
+    logger.info(benchmarkId, "Python process started with PID:", pythonProcess.pid);
 
     let stdout = "";
     let stderr = "";
     let currentProgress = 0;
+    let lastProgressUpdate = Date.now();
 
     pythonProcess.stdout.on("data", (data) => {
-      stdout += data.toString();
-      const lines = stdout.split("\n");
+      const chunk = data.toString();
+      stdout += chunk;
+      logger.debug(benchmarkId, "STDOUT:", chunk.trim());
+
+      const lines = chunk.split("\n");
 
       // Parse progress from output
       for (const line of lines) {
@@ -75,50 +104,64 @@ export async function runBenchmark(
           // Task completed
           if (line.includes("arc_easy")) {
             currentProgress = 33;
-            onProgress({
-              progress: currentProgress,
-              currentTask: "Running HellaSwag...",
-              status: "running",
-            });
+            logger.info(benchmarkId, "ARC-Easy completed, progress: 33%");
+            updateProgress(benchmarkId, 33, "Running HellaSwag...", onProgress);
           } else if (line.includes("hellaswag")) {
             currentProgress = 66;
-            onProgress({
-              progress: currentProgress,
-              currentTask: "Running TruthfulQA...",
-              status: "running",
-            });
+            logger.info(benchmarkId, "HellaSwag completed, progress: 66%");
+            updateProgress(benchmarkId, 66, "Running TruthfulQA...", onProgress);
           } else if (line.includes("truthfulqa")) {
             currentProgress = 90;
-            onProgress({
-              progress: currentProgress,
-              currentTask: "Finalizing results...",
-              status: "running",
-            });
+            logger.info(benchmarkId, "TruthfulQA completed, progress: 90%");
+            updateProgress(benchmarkId, 90, "Finalizing results...", onProgress);
+          }
+        }
+
+        // Track any progress indicators
+        if (line.match(/\d+%/)) {
+          const now = Date.now();
+          if (now - lastProgressUpdate > 5000) {
+            logger.debug(benchmarkId, "Progress indicator:", line.trim());
+            lastProgressUpdate = now;
           }
         }
       }
     });
 
     pythonProcess.stderr.on("data", (data) => {
-      stderr += data.toString();
-      console.error("[Benchmark stderr]", data.toString());
+      const chunk = data.toString();
+      stderr += chunk;
+      logger.warn(benchmarkId, "STDERR:", chunk.trim());
     });
 
     pythonProcess.on("close", async (code) => {
+      logger.info(benchmarkId, `Python process exited with code: ${code}`);
+      logger.debug(benchmarkId, "Final STDOUT length:", stdout.length);
+      logger.debug(benchmarkId, "Final STDERR length:", stderr.length);
+
       if (code === 0) {
         try {
+          logger.info(benchmarkId, "Parsing results from:", outputDir);
+
           // Parse results from output file
           const fs = await import("fs/promises");
           const resultFiles = await fs.readdir(outputDir);
+          logger.debug(benchmarkId, "Files in output directory:", resultFiles);
+
           const jsonFile = resultFiles.find((f) => f.endsWith(".json"));
 
           if (!jsonFile) {
-            throw new Error("No results file found");
+            throw new Error(`No results file found in ${outputDir}. Files: ${resultFiles.join(", ")}`);
           }
 
           const resultsPath = path.join(outputDir, jsonFile);
+          logger.info(benchmarkId, "Reading results from:", resultsPath);
+
           const resultsData = await fs.readFile(resultsPath, "utf-8");
           const results = JSON.parse(resultsData);
+
+          logger.debug(benchmarkId, "Raw results structure:", Object.keys(results));
+          logger.debug(benchmarkId, "Results.results:", results.results ? Object.keys(results.results) : "N/A");
 
           const arcEasy = results.results?.arc_easy?.acc_norm || 0;
           const hellaswag = results.results?.hellaswag?.acc_norm || 0;
@@ -132,6 +175,8 @@ export async function runBenchmark(
             average: average * 100,
           };
 
+          logger.info(benchmarkId, "Final results:", finalResults);
+
           // Update database
           await updateBenchmarkResult(benchmarkId, {
             status: "completed",
@@ -143,6 +188,8 @@ export async function runBenchmark(
             completedAt: new Date(),
           });
 
+          logger.info(benchmarkId, "Database updated successfully");
+
           onProgress({
             progress: 100,
             status: "completed",
@@ -152,6 +199,9 @@ export async function runBenchmark(
           resolve();
         } catch (error) {
           const errorMsg = error instanceof Error ? error.message : "Failed to parse results";
+          logger.error(benchmarkId, "Error parsing results:", errorMsg);
+          logger.error(benchmarkId, "Error stack:", error instanceof Error ? error.stack : "N/A");
+
           await updateBenchmarkResult(benchmarkId, {
             status: "error",
             errorMessage: errorMsg,
@@ -164,10 +214,13 @@ export async function runBenchmark(
           reject(new Error(errorMsg));
         }
       } else {
-        const errorMsg = `Benchmark process exited with code ${code}: ${stderr}`;
+        const errorMsg = `Benchmark process exited with code ${code}`;
+        logger.error(benchmarkId, errorMsg);
+        logger.error(benchmarkId, "STDERR output:", stderr);
+
         await updateBenchmarkResult(benchmarkId, {
           status: "error",
-          errorMessage: errorMsg,
+          errorMessage: `${errorMsg}: ${stderr.slice(0, 500)}`,
         });
         onProgress({
           progress: 0,
@@ -180,6 +233,8 @@ export async function runBenchmark(
 
     pythonProcess.on("error", async (error) => {
       const errorMsg = `Failed to start benchmark: ${error.message}`;
+      logger.error(benchmarkId, errorMsg, error);
+
       await updateBenchmarkResult(benchmarkId, {
         status: "error",
         errorMessage: errorMsg,
@@ -192,4 +247,25 @@ export async function runBenchmark(
       reject(new Error(errorMsg));
     });
   });
+}
+
+async function updateProgress(
+  benchmarkId: number,
+  progress: number,
+  currentTask: string,
+  onProgress: ProgressCallback
+) {
+  try {
+    await updateBenchmarkResult(benchmarkId, {
+      progress,
+      currentTask,
+    });
+    onProgress({
+      progress,
+      currentTask,
+      status: "running",
+    });
+  } catch (error) {
+    logger.error(benchmarkId, "Failed to update progress:", error);
+  }
 }

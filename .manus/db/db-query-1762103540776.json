@@ -1,0 +1,26 @@
+{
+  "query": "SELECT * FROM benchmark_results WHERE id = 30001;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute SELECT * FROM benchmark_results WHERE id = 30001;",
+  "rows": [
+    {
+      "id": "30001",
+      "versionName": "v5",
+      "apiUrl": "https://superai-llm-engine-ccgxnii32a-uc.a.run.app",
+      "sampleLimit": "50",
+      "status": "running",
+      "progress": "10",
+      "currentTask": "Benchmark in progress (detected running process)",
+      "arcEasy": "NULL",
+      "hellaswag": "NULL",
+      "truthfulqa": "NULL",
+      "average": "NULL",
+      "errorMessage": "NULL",
+      "createdAt": "2025-11-02 17:06:14",
+      "completedAt": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tversionName\tapiUrl\tsampleLimit\tstatus\tprogress\tcurrentTask\tarcEasy\thellaswag\ttruthfulqa\taverage\terrorMessage\tcreatedAt\tcompletedAt\n30001\tv5\thttps://superai-llm-engine-ccgxnii32a-uc.a.run.app\t50\trunning\t10\tBenchmark in progress (detected running process)\tNULL\tNULL\tNULL\tNULL\tNULL\t2025-11-02 17:06:14\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1566
+}
