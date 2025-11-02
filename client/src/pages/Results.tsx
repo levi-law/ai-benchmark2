@@ -9,40 +9,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Download, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-
-interface BenchmarkResult {
-  id: string;
-  timestamp: string;
-  version: string;
-  average: number;
-  arc_easy: number;
-  hellaswag: number;
-  truthfulqa: number;
-}
+import { trpc } from "@/lib/trpc";
 
 export default function Results() {
-  const [results, setResults] = useState<BenchmarkResult[]>([]);
-
-  useEffect(() => {
-    loadResults();
-  }, []);
-
-  const loadResults = () => {
-    const stored = localStorage.getItem("benchmark_results");
-    if (stored) {
-      setResults(JSON.parse(stored));
-    }
-  };
-
-  const deleteResult = (id: string) => {
-    const updated = results.filter((r) => r.id !== id);
-    localStorage.setItem("benchmark_results", JSON.stringify(updated));
-    setResults(updated);
-    toast.success("Result deleted");
-  };
+  const { data: results = [], isLoading } = trpc.benchmark.list.useQuery();
 
   const exportResults = () => {
     const dataStr = JSON.stringify(results, null, 2);
@@ -65,13 +37,22 @@ export default function Results() {
               View and manage all benchmark results
             </p>
           </div>
-          <Button onClick={exportResults} className="gap-2" disabled={results.length === 0}>
+          <Button onClick={exportResults} className="gap-2" disabled={results.length === 0 || isLoading}>
             <Download className="h-4 w-4" />
             Export
           </Button>
         </div>
 
-        {results.length === 0 ? (
+        {isLoading ? (
+          <Card>
+            <CardContent className="flex items-center justify-center py-12">
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Loading results...</span>
+              </div>
+            </CardContent>
+          </Card>
+        ) : results.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <p className="text-muted-foreground">No results yet</p>
@@ -94,40 +75,47 @@ export default function Results() {
                   <TableRow>
                     <TableHead>Version</TableHead>
                     <TableHead>Date</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">ARC-Easy</TableHead>
                     <TableHead className="text-right">HellaSwag</TableHead>
                     <TableHead className="text-right">TruthfulQA</TableHead>
                     <TableHead className="text-right">Average</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {results.map((result) => (
                     <TableRow key={result.id}>
-                      <TableCell className="font-medium">{result.version}</TableCell>
+                      <TableCell className="font-medium">{result.versionName}</TableCell>
                       <TableCell className="text-muted-foreground">
-                        {new Date(result.timestamp).toLocaleString()}
+                        {new Date(result.createdAt).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                            result.status === "completed"
+                              ? "bg-green-500/10 text-green-500"
+                              : result.status === "running"
+                              ? "bg-blue-500/10 text-blue-500"
+                              : result.status === "error"
+                              ? "bg-red-500/10 text-red-500"
+                              : "bg-gray-500/10 text-gray-500"
+                          }`}
+                        >
+                          {result.status}
+                          {result.status === "running" && ` (${result.progress}%)`}
+                        </span>
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        {result.arc_easy.toFixed(2)}%
+                        {result.arcEasy ? `${result.arcEasy.toFixed(2)}%` : "-"}
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        {result.hellaswag.toFixed(2)}%
+                        {result.hellaswag ? `${result.hellaswag.toFixed(2)}%` : "-"}
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        {result.truthfulqa.toFixed(2)}%
+                        {result.truthfulqa ? `${result.truthfulqa.toFixed(2)}%` : "-"}
                       </TableCell>
                       <TableCell className="text-right font-mono font-bold">
-                        {result.average.toFixed(2)}%
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => deleteResult(result.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
+                        {result.average ? `${result.average.toFixed(2)}%` : "-"}
                       </TableCell>
                     </TableRow>
                   ))}

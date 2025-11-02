@@ -4,28 +4,13 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Activity, BarChart3, GitCompare, Play, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
 import { useEffect, useState } from "react";
-
-interface BenchmarkResult {
-  id: string;
-  timestamp: string;
-  version: string;
-  average: number;
-  arc_easy: number;
-  hellaswag: number;
-  truthfulqa: number;
-}
+import { trpc } from "@/lib/trpc";
 
 export default function Home() {
-  const [results, setResults] = useState<BenchmarkResult[]>([]);
+  const { data: results = [] } = trpc.benchmark.list.useQuery();
   const [apiHealth, setApiHealth] = useState<string>("checking");
 
   useEffect(() => {
-    // Load results from localStorage
-    const stored = localStorage.getItem("benchmark_results");
-    if (stored) {
-      setResults(JSON.parse(stored));
-    }
-
     // Check API health
     fetch("https://superai-llm-engine-ccgxnii32a-uc.a.run.app/health")
       .then(res => res.json())
@@ -33,7 +18,8 @@ export default function Home() {
       .catch(() => setApiHealth("offline"));
   }, []);
 
-  const latestResult = results[0];
+  const completedResults = results.filter(r => r.status === "completed");
+  const latestResult = completedResults[0];
 
   return (
     <DashboardLayout>
@@ -76,10 +62,10 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {latestResult ? `${latestResult.average.toFixed(2)}%` : "N/A"}
+                {latestResult ? `${latestResult.average?.toFixed(2)}%` : "N/A"}
               </div>
               <p className="text-xs text-muted-foreground">
-                {latestResult ? latestResult.version : "No results yet"}
+                {latestResult ? latestResult.versionName : "No results yet"}
               </p>
             </CardContent>
           </Card>
@@ -90,9 +76,9 @@ export default function Home() {
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{results.length}</div>
+              <div className="text-2xl font-bold">{completedResults.length}</div>
               <p className="text-xs text-muted-foreground">
-                Benchmark executions
+                Completed benchmarks
               </p>
             </CardContent>
           </Card>
@@ -104,8 +90,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {results.length > 0
-                  ? `${Math.max(...results.map(r => r.average)).toFixed(2)}%`
+                {completedResults.length > 0
+                  ? `${Math.max(...completedResults.map(r => r.average || 0)).toFixed(2)}%`
                   : "N/A"}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -146,35 +132,35 @@ export default function Home() {
         </Card>
 
         {/* Recent Results */}
-        {results.length > 0 && (
+        {completedResults.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle>Recent Results</CardTitle>
               <CardDescription>
-                Latest benchmark executions
+                Latest completed benchmarks
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {results.slice(0, 5).map((result) => (
+                {completedResults.slice(0, 5).map((result) => (
                   <div
                     key={result.id}
                     className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0"
                   >
                     <div>
-                      <p className="font-medium">{result.version}</p>
+                      <p className="font-medium">{result.versionName}</p>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(result.timestamp).toLocaleString()}
+                        {new Date(result.createdAt).toLocaleString()}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold">
-                        {result.average.toFixed(2)}%
+                        {result.average?.toFixed(2)}%
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        ARC: {result.arc_easy.toFixed(0)}% | HS:{" "}
-                        {result.hellaswag.toFixed(0)}% | TQ:{" "}
-                        {result.truthfulqa.toFixed(0)}%
+                        ARC: {result.arcEasy?.toFixed(0)}% | HS:{" "}
+                        {result.hellaswag?.toFixed(0)}% | TQ:{" "}
+                        {result.truthfulqa?.toFixed(0)}%
                       </p>
                     </div>
                   </div>

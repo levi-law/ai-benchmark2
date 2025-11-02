@@ -32,3 +32,14 @@
 - [x] Loading states and error handling
 - [x] Toast notifications for actions
 - [x] Dark mode support
+
+
+## Backend API Integration (New)
+
+- [x] Upgrade to web-db-user template for backend support
+- [x] Create tRPC endpoints for benchmark execution
+- [x] Integrate Python benchmark scripts from /home/ubuntu/superai_benchmark
+- [x] Add benchmark job queue and status tracking
+- [x] Store benchmark results in database
+- [x] Update frontend to call real API endpoints
+- [ ] Test end-to-end benchmark execution
