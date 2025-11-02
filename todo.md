@@ -47,3 +47,5 @@
 ## Bug Fixes
 
 - [x] Fix Python version mismatch in benchmark execution (use python3.11 instead of python3.13)
+
+- [x] Fix Python environment PATH issue (Python 3.11 importing from Python 3.13 directories)

@@ -48,9 +48,17 @@ export async function runBenchmark(
       outputDir,
     ];
 
+    // Use minimal clean environment to avoid Python path conflicts with UV
+    const cleanEnv: Record<string, string> = {
+      PATH: "/usr/bin:/bin:/usr/local/bin",
+      HOME: process.env.HOME || "/home/ubuntu",
+      LANG: "en_US.UTF-8",
+      LC_ALL: "en_US.UTF-8",
+    };
+    
     const pythonProcess = spawn("/usr/bin/python3.11", args, {
       cwd: benchmarkDir,
-      env: { ...process.env },
+      env: cleanEnv,
     });
 
     let stdout = "";
