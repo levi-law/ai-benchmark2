@@ -8,6 +8,7 @@ import { AlertCircle, CheckCircle2, Loader2, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { LogViewer } from "@/components/LogViewer";
 
 export default function RunBenchmark() {
   const [apiUrl, setApiUrl] = useState("https://superai-llm-engine-ccgxnii32a-uc.a.run.app");
@@ -230,6 +231,11 @@ export default function RunBenchmark() {
             </p>
           </CardContent>
         </Card>
+
+        {/* Log Viewer */}
+        {benchmarkId && (
+          <LogViewer benchmarkId={benchmarkId} />
+        )}
       </div>
     </DashboardLayout>
   );

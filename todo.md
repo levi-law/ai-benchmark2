@@ -54,3 +54,11 @@
 - [x] Fix progress tracking and result display issues
 - [x] Debug why benchmark runs but shows no progress
 - [x] Fix Python buffering issue causing process to hang
+
+## UI Enhancements
+
+- [x] Add real-time log viewer component
+- [x] Stream benchmark logs to frontend via SSE
+- [x] Display Python stdout/stderr in log viewer
+- [x] Auto-scroll logs as they come in
+- [x] Add pause/resume, download, and clear functionality

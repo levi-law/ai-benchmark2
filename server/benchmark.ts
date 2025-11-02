@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
 import path from "path";
 import { updateBenchmarkResult } from "./db";
+import { logStreamManager, createLogEntry } from "./log-stream";
 
 export interface BenchmarkConfig {
   apiUrl: string;
@@ -26,16 +27,24 @@ export type ProgressCallback = (progress: BenchmarkProgress) => void;
 
 const logger = {
   info: (benchmarkId: number, msg: string, ...args: any[]) => {
+    const message = `${msg} ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')}`;
     console.log(`[Benchmark #${benchmarkId}] INFO:`, msg, ...args);
+    logStreamManager.addLog(createLogEntry(benchmarkId, "info", message));
   },
   error: (benchmarkId: number, msg: string, ...args: any[]) => {
+    const message = `${msg} ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')}`;
     console.error(`[Benchmark #${benchmarkId}] ERROR:`, msg, ...args);
+    logStreamManager.addLog(createLogEntry(benchmarkId, "error", message));
   },
   debug: (benchmarkId: number, msg: string, ...args: any[]) => {
+    const message = `${msg} ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')}`;
     console.log(`[Benchmark #${benchmarkId}] DEBUG:`, msg, ...args);
+    logStreamManager.addLog(createLogEntry(benchmarkId, "debug", message));
   },
   warn: (benchmarkId: number, msg: string, ...args: any[]) => {
+    const message = `${msg} ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')}`;
     console.warn(`[Benchmark #${benchmarkId}] WARN:`, msg, ...args);
+    logStreamManager.addLog(createLogEntry(benchmarkId, "info", message));
   },
 };
 
@@ -94,7 +103,9 @@ export async function runBenchmark(
     pythonProcess.stdout.on("data", (data) => {
       const chunk = data.toString();
       stdout += chunk;
-      logger.debug(benchmarkId, "STDOUT:", chunk.trim());
+      
+      // Stream stdout to log viewer
+      logStreamManager.addLog(createLogEntry(benchmarkId, "stdout", chunk.trim()));
 
       const lines = chunk.split("\n");
 
@@ -131,7 +142,9 @@ export async function runBenchmark(
     pythonProcess.stderr.on("data", (data) => {
       const chunk = data.toString();
       stderr += chunk;
-      logger.warn(benchmarkId, "STDERR:", chunk.trim());
+      
+      // Stream stderr to log viewer
+      logStreamManager.addLog(createLogEntry(benchmarkId, "stderr", chunk.trim()));
     });
 
     pythonProcess.on("close", async (code) => {
