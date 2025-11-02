@@ -48,7 +48,7 @@ export async function runBenchmark(
       outputDir,
     ];
 
-    const pythonProcess = spawn("python3.11", args, {
+    const pythonProcess = spawn("/usr/bin/python3.11", args, {
       cwd: benchmarkDir,
       env: { ...process.env },
     });

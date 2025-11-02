@@ -43,3 +43,7 @@
 - [x] Store benchmark results in database
 - [x] Update frontend to call real API endpoints
 - [ ] Test end-to-end benchmark execution
+
+## Bug Fixes
+
+- [x] Fix Python version mismatch in benchmark execution (use python3.11 instead of python3.13)
