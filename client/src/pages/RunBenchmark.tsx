@@ -13,7 +13,7 @@ import { LogViewer } from "@/components/LogViewer";
 export default function RunBenchmark() {
   const [apiUrl, setApiUrl] = useState("https://superai-llm-engine-ccgxnii32a-uc.a.run.app");
   const [versionName, setVersionName] = useState("");
-  const [sampleLimit, setSampleLimit] = useState(50);
+  const [sampleLimit, setSampleLimit] = useState(5);
   const [isRunning, setIsRunning] = useState(false);
   const [benchmarkId, setBenchmarkId] = useState<number | null>(null);
 
@@ -107,19 +107,48 @@ export default function RunBenchmark() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="samples">Sample Limit</Label>
+                <Label htmlFor="sampleLimit">Sample Limit</Label>
+                <div className="flex gap-2 mb-2">
+                  <Button
+                    type="button"
+                    variant={sampleLimit === 5 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSampleLimit(5)}
+                    disabled={isRunning}
+                  >
+                    Quick Test (5)
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={sampleLimit === 50 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSampleLimit(50)}
+                    disabled={isRunning}
+                  >
+                    Standard (50)
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={sampleLimit === 100 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSampleLimit(100)}
+                    disabled={isRunning}
+                  >
+                    Full (100)
+                  </Button>
+                </div>
                 <Input
-                  id="samples"
+                  id="sampleLimit"
                   type="number"
                   value={sampleLimit}
-                  onChange={(e) => setSampleLimit(parseInt(e.target.value) || 50)}
+                  onChange={(e) => setSampleLimit(Number(e.target.value))}
                   placeholder="50"
                   min={5}
                   max={100}
                   disabled={isRunning}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Number of samples per task (5-100, 50 recommended)
+                  Quick Test (~1 min) | Standard (~20 min) | Full (~40 min)
                 </p>
               </div>
 

@@ -88,3 +88,9 @@
 
 - [x] Implement benchmark queue to limit concurrent benchmarks to 1 (prevent OOM kills)
 - [ ] Add queue status display in UI showing pending benchmarks
+
+- [x] Debug why new benchmark shows no activity in logs - old benchmarks were consuming resources
+- [x] Check if queue system is working correctly - works for new benchmarks, killed old ones
+
+- [x] Add "Quick Test" preset with 5 samples (completes in ~1 minute)
+- [x] Add preset buttons to UI for Quick Test (5), Standard (50), Full (100)
