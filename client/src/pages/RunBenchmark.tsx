@@ -41,6 +41,8 @@ export default function RunBenchmark() {
       return;
     }
 
+    // Reset state for new benchmark
+    setBenchmarkId(null);
     setIsRunning(true);
 
     try {

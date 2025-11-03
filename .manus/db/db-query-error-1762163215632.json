@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, versionName, status, errorMessage, createdAt, (strftime('%s', 'now') - strftime('%s', createdAt)) as age_seconds FROM benchmark_results ORDER BY id DESC LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute SELECT id, versionName, status, errorMessage, createdAt, (strftime('%s', 'now') - strftime('%s', createdAt)) as age_seconds FROM benchmark_results ORDER BY id DESC LIMIT 5",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1305 (42000) at line 1: FUNCTION eH66kHGNH9agyVJg9WbVUh.strftime does not exist"
+  ]
+}

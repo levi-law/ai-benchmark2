@@ -74,3 +74,6 @@
 - [x] Check if Python dependencies are available in the server environment - all dependencies working
 
 - [x] Fix UI showing "failed" when benchmark is still running - added 30-second grace period before error checking
+
+- [x] Investigate why UI shows old "failed" benchmarks instead of current running benchmark - UI was not resetting benchmarkId
+- [x] Add better UI refresh/polling to show current benchmark status - added state reset on new benchmark
