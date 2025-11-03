@@ -80,7 +80,7 @@ export async function runBenchmark(
     // Use minimal clean environment to avoid Python path conflicts with UV
     const cleanEnv: Record<string, string> = {
       PATH: "/usr/bin:/bin:/usr/local/bin",
-      HOME: process.env.HOME || "/home/ubuntu",
+      HOME: "/root",  // Node.js server runs as root
       LANG: "en_US.UTF-8",
       LC_ALL: "en_US.UTF-8",
     };

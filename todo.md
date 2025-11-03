@@ -62,3 +62,8 @@
 - [x] Display Python stdout/stderr in log viewer
 - [x] Auto-scroll logs as they come in
 - [x] Add pause/resume, download, and clear functionality
+
+## Critical Bugs
+
+- [x] Fix Python spawn error (ENOENT) - fixed HOME environment variable
+- [x] Add search and filter functionality to log viewer
