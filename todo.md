@@ -77,3 +77,8 @@
 
 - [x] Investigate why UI shows old "failed" benchmarks instead of current running benchmark - UI was not resetting benchmarkId
 - [x] Add better UI refresh/polling to show current benchmark status - added state reset on new benchmark
+
+- [ ] Investigate why benchmark fails after successfully loading datasets (100% progress bars shown)
+- [ ] Check if there's an error in the actual evaluation phase
+
+- [x] Fix spawn /usr/bin/python3.11 ENOENT error - Changed to use python3.11 without full path to rely on PATH env var

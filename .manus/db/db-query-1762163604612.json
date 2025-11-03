@@ -1,0 +1,26 @@
+{
+  "query": "SELECT id, versionName, status, progress, errorMessage, createdAt FROM benchmark_results WHERE id IN (60005, 60006) ORDER BY id DESC",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute SELECT id, versionName, status, progress, errorMessage, createdAt FROM benchmark_results WHERE id IN (60005, 60006) ORDER BY id DESC",
+  "rows": [
+    {
+      "id": "60006",
+      "versionName": "2",
+      "status": "error",
+      "progress": "0",
+      "errorMessage": "Benchmark process terminated without creating output directory",
+      "createdAt": "2025-11-03 09:51:50"
+    },
+    {
+      "id": "60005",
+      "versionName": "2",
+      "status": "error",
+      "progress": "0",
+      "errorMessage": "Benchmark process terminated without creating output directory",
+      "createdAt": "2025-11-03 09:46:25"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tversionName\tstatus\tprogress\terrorMessage\tcreatedAt\n60006\t2\terror\t0\tBenchmark process terminated without creating output directory\t2025-11-03 09:51:50\n60005\t2\terror\t0\tBenchmark process terminated without creating output directory\t2025-11-03 09:46:25\n",
+  "stderr": "",
+  "execution_time_ms": 1620
+}

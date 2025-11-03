@@ -75,7 +75,7 @@ export async function runBenchmark(
       outputDir,
     ];
 
-    logger.debug(benchmarkId, "Python command:", "/usr/bin/python3.11", args.join(" "));
+    logger.debug(benchmarkId, "Python command: python3.11", args.join(" "));
 
     // Use minimal clean environment to avoid Python path conflicts with UV
     const cleanEnv: Record<string, string> = {
@@ -87,7 +87,7 @@ export async function runBenchmark(
 
     logger.debug(benchmarkId, "Environment:", cleanEnv);
     
-    const pythonProcess = spawn("/usr/bin/python3.11", ["-u", ...args], {
+    const pythonProcess = spawn("python3.11", ["-u", ...args], {
       cwd: benchmarkDir,
       env: cleanEnv,
       stdio: ["ignore", "pipe", "pipe"],
