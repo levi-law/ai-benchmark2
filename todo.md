@@ -94,3 +94,6 @@
 
 - [x] Add "Quick Test" preset with 5 samples (completes in ~1 minute)
 - [x] Add preset buttons to UI for Quick Test (5), Standard (50), Full (100)
+
+- [x] Fix benchmarks stuck in "pending" status - added queue recovery on server restart
+- [x] Debug why queue.enqueue() isn't starting benchmarks - queue lost state on restart, now recovers from DB

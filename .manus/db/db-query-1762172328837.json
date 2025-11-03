@@ -1,0 +1,24 @@
+{
+  "query": "SELECT id, versionName, status, currentTask, createdAt FROM benchmark_results WHERE status = 'pending' ORDER BY id DESC LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3qVSyfaUBGVYLwL.9e6e5c46e9ed --database eH66kHGNH9agyVJg9WbVUh --execute SELECT id, versionName, status, currentTask, createdAt FROM benchmark_results WHERE status = 'pending' ORDER BY id DESC LIMIT 5",
+  "rows": [
+    {
+      "id": "60012",
+      "versionName": "v2",
+      "status": "pending",
+      "currentTask": "Queued (position 2)",
+      "createdAt": "2025-11-03 12:14:12"
+    },
+    {
+      "id": "60011",
+      "versionName": "ttt",
+      "status": "pending",
+      "currentTask": "Queued (position 1)",
+      "createdAt": "2025-11-03 12:07:48"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tversionName\tstatus\tcurrentTask\tcreatedAt\n60012\tv2\tpending\tQueued (position 2)\t2025-11-03 12:14:12\n60011\tttt\tpending\tQueued (position 1)\t2025-11-03 12:07:48\n",
+  "stderr": "",
+  "execution_time_ms": 1552
+}

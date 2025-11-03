@@ -101,6 +101,33 @@ class BenchmarkQueue {
       isProcessing: this.isProcessing,
     };
   }
+
+  /**
+   * Recover pending benchmarks from database on server restart
+   */
+  async recoverPendingBenchmarks(): Promise<void> {
+    const { getAllBenchmarkResults } = await import("./db");
+    const allBenchmarks = await getAllBenchmarkResults();
+    const pendingBenchmarks = allBenchmarks.filter(b => b.status === "pending");
+    
+    if (pendingBenchmarks.length > 0) {
+      console.log(`[BenchmarkQueue] Recovering ${pendingBenchmarks.length} pending benchmarks`);
+      
+      for (const benchmark of pendingBenchmarks) {
+        // Re-enqueue with default config (will be overridden by actual config if available)
+        await this.enqueue(
+          benchmark.id,
+          {
+            apiUrl: benchmark.apiUrl || "https://superai-llm-engine-ccgxnii32a-uc.a.run.app",
+            tasks: ["arc_easy", "hellaswag", "truthfulqa_mc2"],
+            numFewshot: 0,
+            limit: benchmark.sampleLimit || 5,
+          },
+          () => {} // No progress callback for recovered benchmarks
+        );
+      }
+    }
+  }
 }
 
 // Export singleton instance

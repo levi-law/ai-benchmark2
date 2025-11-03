@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { benchmarkMonitor } from "../benchmark-monitor";
 import { setupLogSSE } from "../log-sse";
+import { benchmarkQueue } from "../benchmark-queue";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -66,6 +67,10 @@ async function startServer() {
     console.log(`Server running on http://localhost:${port}/`);
     // Start benchmark monitor
     benchmarkMonitor.start().catch(console.error);
+    // Recover pending benchmarks from database
+    benchmarkQueue.recoverPendingBenchmarks().catch(err => {
+      console.error("Failed to recover pending benchmarks:", err);
+    });
   });
 }
 
