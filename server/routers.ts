@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { createBenchmarkResult, getAllBenchmarkResults, getBenchmarkResult, updateBenchmarkResult } from "./db";
-import { runBenchmark } from "./benchmark";
+import { benchmarkQueue } from "./benchmark-queue";
 import { EventEmitter } from "events";
 
 const benchmarkEmitter = new EventEmitter();
@@ -42,15 +42,10 @@ export const appRouter = router({
           progress: 0,
         });
 
-        // Start benchmark in background
+        // Add benchmark to queue (runs one at a time to prevent OOM)
         setImmediate(async () => {
           try {
-            await updateBenchmarkResult(result.id, {
-              status: "running",
-              currentTask: "Starting benchmark...",
-            });
-
-            await runBenchmark(
+            await benchmarkQueue.enqueue(
               result.id,
               {
                 apiUrl: input.apiUrl,

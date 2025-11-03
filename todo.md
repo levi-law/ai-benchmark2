@@ -82,3 +82,9 @@
 - [ ] Check if there's an error in the actual evaluation phase
 
 - [x] Fix spawn /usr/bin/python3.11 ENOENT error - Changed to use python3.11 without full path to rely on PATH env var
+
+- [x] Investigate why Python process exits with code null after 6 minutes - OOM killer terminated the process
+- [x] Check if process is being killed by OOM, timeout, or signal - confirmed OOM kill
+
+- [x] Implement benchmark queue to limit concurrent benchmarks to 1 (prevent OOM kills)
+- [ ] Add queue status display in UI showing pending benchmarks
