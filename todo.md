@@ -67,3 +67,10 @@
 
 - [x] Fix Python spawn error (ENOENT) - fixed HOME environment variable
 - [x] Add search and filter functionality to log viewer
+
+## Critical Issues
+
+- [x] Debug why benchmark process terminates without creating output directory - process is running correctly, previous error was from failed run
+- [x] Check if Python dependencies are available in the server environment - all dependencies working
+
+- [x] Fix UI showing "failed" when benchmark is still running - added 30-second grace period before error checking

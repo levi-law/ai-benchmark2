@@ -72,13 +72,19 @@ export class BenchmarkMonitor {
         await this.checkProcess(proc);
       }
 
-      // Check for benchmarks marked as running but no process found
+      // Check for benchmarks that are marked as running but don't have a process
       for (const benchmark of runningInDb) {
         const hasProcess = runningProcesses.some((p) => p.benchmarkId === benchmark.id);
         if (!hasProcess) {
-          logger.warn(`Benchmark #${benchmark.id} marked as running but no process found - may have crashed`);
-          // Check if results exist
-          await this.checkForResults(benchmark.id);
+          // Only check for results if benchmark has been running for at least 30 seconds
+          // This prevents premature error marking for newly started benchmarks
+          const benchmarkAge = Date.now() - new Date(benchmark.createdAt).getTime();
+          if (benchmarkAge > 30000) {
+            logger.info(`Found benchmark #${benchmark.id} marked as running but no process found (age: ${Math.floor(benchmarkAge/1000)}s)`);
+            await this.checkForResults(benchmark.id);
+          } else {
+            logger.debug(`Benchmark #${benchmark.id} is new (age: ${Math.floor(benchmarkAge/1000)}s), skipping error check`);
+          }
         }
       }
     } catch (error) {
